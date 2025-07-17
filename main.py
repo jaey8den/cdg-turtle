@@ -1,13 +1,15 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from fastapi.responses import FileResponse
+from fastapi.responses import JSONResponse
 
 import turtle
 import math
 from mods import clean_string, patterns
 from wand.image import Image
+import base64
+import os
 
 class Instructions(BaseModel):
     instructions: str
@@ -87,7 +89,17 @@ async def process_instructions(instructions: Instructions):
 
 @app.get("/get_diagram")
 async def get_diagram():
-    return FileResponse(f"diagrams/output.jpg")
+    image_path = "diagrams/output.jpg"
+    
+    if not os.path.exists(image_path):
+        return JSONResponse(content={"error": "Image not found."}, status_code = 404)
+    
+    try:
+        with open(image_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
+        return JSONResponse(content={"image_data": encoded_string})
+    except Exception as e:
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
 # if __name__ == "__main__":
 #     uvicorn.run(app, host="0.0.0.0", port=8000)
