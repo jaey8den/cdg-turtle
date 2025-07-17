@@ -14,18 +14,18 @@ class Instructions(BaseModel):
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:8000",
-    "https://your-production-domain.com",
-]
+# origins = [
+#     "http://localhost:8000",
+#     "https://your-production-domain.com",
+# ]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 @app.post("/instructions")
 async def process_instructions(instructions: Instructions):
@@ -81,13 +81,13 @@ async def process_instructions(instructions: Instructions):
     screen.getcanvas().postscript(file="venv/diagrams/output.eps")
 
     # Convert diagram to PNG
-    with Image(filename="venv/diagrams/output.eps") as img:
+    with Image(filename="diagrams/output.eps") as img:
         img.format = "jpeg"
-        img.save(filename="venv/diagrams/output.jpg")
+        img.save(filename="diagrams/output.jpg")
 
 @app.get("/get_diagram")
 async def get_diagram():
-    return FileResponse(f"venv/diagrams/output.jpg")
+    return FileResponse(f"diagrams/output.jpg")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
