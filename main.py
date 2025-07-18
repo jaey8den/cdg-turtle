@@ -32,8 +32,6 @@ app = FastAPI()
 @app.post("/instructions")
 async def process_instructions(instr_obj: Instructions):
 
-    return instr_obj.instructions
-
     # Initialize the turtle graphics
     screen = turtle.Screen()
     screen.setup(width=1000, height=1000)
@@ -48,7 +46,10 @@ async def process_instructions(instr_obj: Instructions):
     mrRadius = 0.2 * layerWidth
 
     # Clean and process the input string
-    res = clean_string.CleanString(instr_obj.instructions)
+    try:
+        res = clean_string.CleanString(instr_obj.instructions)
+    except:
+        return "clean string error: {e}"
 
     # Determine the reps in each layer
     reps = []
@@ -62,32 +63,38 @@ async def process_instructions(instr_obj: Instructions):
         patterns.MR(pen, layerWidth)
 
     # Draw main pattern
-    for j in range(len(res)):
-        for i, p in enumerate(res[j]):
-            pen.up()        
-            pen.goto((layerWidth * (j + 1) + mrRadius) * math.cos(((2 * pi * i))/reps[j]), (layerWidth * (j + 1) + mrRadius) * math.sin(((2 * pi * i))/reps[j]))
-            pen.setheading(pen.towards(0,0))
-            # Multiple chains
-            if len(p.split(" ")) > 1:
-                temp = p.split(" ")
-                patterns.pattern[temp[1]](pen, int(temp[0]), layerWidth)
-            # Single chain
-            elif p == "CH":
-                patterns.pattern[p](pen, 1, layerWidth)
-            # Slip stitch
-            elif p == "SLST":
-                patterns.pattern[p](pen, layerWidth)
-            # Everything else
-            else:
-                patterns.pattern[p](pen, layerWidth, reps[j], j + 1)
+    try:
+        for j in range(len(res)):
+            for i, p in enumerate(res[j]):
+                pen.up()        
+                pen.goto((layerWidth * (j + 1) + mrRadius) * math.cos(((2 * pi * i))/reps[j]), (layerWidth * (j + 1) + mrRadius) * math.sin(((2 * pi * i))/reps[j]))
+                pen.setheading(pen.towards(0,0))
+                # Multiple chains
+                if len(p.split(" ")) > 1:
+                    temp = p.split(" ")
+                    patterns.pattern[temp[1]](pen, int(temp[0]), layerWidth)
+                # Single chain
+                elif p == "CH":
+                    patterns.pattern[p](pen, 1, layerWidth)
+                # Slip stitch
+                elif p == "SLST":
+                    patterns.pattern[p](pen, layerWidth)
+                # Everything else
+                else:
+                    patterns.pattern[p](pen, layerWidth, reps[j], j + 1)
+    except:
+        return "main pattern error: {e}"
     
     # Extract canvas as eps file
-    screen.getcanvas().postscript(file="venv/diagrams/output.eps")
+    try:
+        screen.getcanvas().postscript(file="venv/diagrams/output.eps")
 
-    # Convert diagram to PNG
-    with Image(filename="diagrams/output.eps") as img:
-        img.format = "jpeg"
-        img.save(filename="diagrams/output.jpg")
+        # Convert diagram to PNG
+        with Image(filename="diagrams/output.eps") as img:
+            img.format = "jpeg"
+            img.save(filename="diagrams/output.jpg")
+    except:
+        return "extracting and conversion error: {e}"
 
 @app.get("/get_diagram")
 async def get_diagram():
