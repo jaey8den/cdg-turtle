@@ -40,6 +40,8 @@ async def process_instructions(instr_obj: Instructions):
     pen.hideturtle()
     pen.speed(10)
 
+    return instr_obj.instructions
+
     # Initialize variables
     pi = math.pi
     layerWidth = 100
