@@ -32,6 +32,8 @@ app = FastAPI()
 @app.post("/instructions")
 async def process_instructions(instr_obj: Instructions):
 
+    return instr_obj.instructions
+
     # Initialize the turtle graphics
     screen = turtle.Screen()
     screen.setup(width=1000, height=1000)
