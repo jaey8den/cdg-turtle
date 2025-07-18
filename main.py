@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
@@ -30,7 +30,7 @@ app = FastAPI()
 # )
 
 @app.post("/instructions")
-async def process_instructions(instructions: Instructions):
+async def process_instructions(instr_obj: Instructions):
 
     # Initialize the turtle graphics
     screen = turtle.Screen()
@@ -46,7 +46,7 @@ async def process_instructions(instructions: Instructions):
     mrRadius = 0.2 * layerWidth
 
     # Clean and process the input string
-    res = clean_string.CleanString(instructions)
+    res = clean_string.CleanString(instr_obj.instructions)
 
     # Determine the reps in each layer
     reps = []
@@ -95,11 +95,9 @@ async def get_diagram():
         return JSONResponse(content={"error": "Image not found."}, status_code = 404)
     
     try:
+        # Opens image in read binary mode
         with open(image_path, "rb") as image_file:
             encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
         return JSONResponse(content={"image_data": encoded_string})
     except Exception as e:
         return JSONResponse(content={"error": str(e)}, status_code=500)
-
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="0.0.0.0", port=8000)
