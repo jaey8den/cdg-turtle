@@ -36,12 +36,13 @@ async def process_instructions(instr_obj: Instructions):
     try:
         screen = turtle.Screen()
         screen.setup(width=1000, height=1000)
+        screen.tracer()
         pen = turtle.Turtle()
         pen.up()
         pen.hideturtle()
-        pen.speed(10)
-    except:
-        return "init turtle graphics error: {e}"
+        pen.speed(0)
+    except Exception as e:
+        return "init turtle graphics error: " + e
 
     # Initialize variables
     pi = math.pi
@@ -85,17 +86,30 @@ async def process_instructions(instr_obj: Instructions):
                 # Everything else
                 else:
                     patterns.pattern[p](pen, layerWidth, reps[j], j + 1)
+    
+        # Ensure all drawing is finished
+        screen.update()
+
     except:
         return "main pattern error: {e}"
     
     # Extract canvas as eps file
-    try:
-        screen.getcanvas().postscript(file="diagrams/output.eps")
+    epsPath = "diagrams/output.eps"
+    screen.getcanvas().postscript(file=epsPath)
 
-        # Convert diagram to PNG
+    try:
+        # Convert diagram to JPG
         with Image(filename="diagrams/output.eps") as img:
             img.format = "jpeg"
             img.save(filename="diagrams/output.jpg")
+
+        # Clean up temp eps file
+        os.remove(epsPath)
+
+        # Clean up turtle resources
+        turtle.clearscreen()
+        turtle.bye()
+
     except:
         return "extracting and conversion error: {e}"
 
