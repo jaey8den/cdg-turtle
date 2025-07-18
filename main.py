@@ -42,7 +42,7 @@ async def process_instructions(instr_obj: Instructions):
         pen.hideturtle()
         pen.speed(0)
     except Exception as e:
-        return "init turtle graphics error: " + e
+        return f"init turtle graphics error: {e}"
 
     # Initialize variables
     pi = math.pi
@@ -53,7 +53,7 @@ async def process_instructions(instr_obj: Instructions):
     try:
         res = clean_string.CleanString(instr_obj.instructions)
     except:
-        return "clean string error: {e}"
+        return f"clean string error: {e}"
 
     # Determine the reps in each layer
     reps = []
@@ -91,7 +91,7 @@ async def process_instructions(instr_obj: Instructions):
         screen.update()
 
     except:
-        return "main pattern error: {e}"
+        return f"main pattern error: {e}"
     
     # Extract canvas as eps file
     epsPath = "diagrams/output.eps"
@@ -111,7 +111,7 @@ async def process_instructions(instr_obj: Instructions):
         turtle.bye()
 
     except:
-        return "extracting and conversion error: {e}"
+        return f"extracting and conversion error: {e}"
 
 @app.get("/get_diagram")
 async def get_diagram():
