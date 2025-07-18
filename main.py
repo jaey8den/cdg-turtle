@@ -32,17 +32,16 @@ app = FastAPI()
 @app.post("/instructions")
 async def process_instructions(instr_obj: Instructions):
 
-    return instr_obj.instructions
-
     # Initialize the turtle graphics
-    screen = turtle.Screen()
-    screen.setup(width=1000, height=1000)
-    pen = turtle.Turtle()
-    pen.up()
-    pen.hideturtle()
-    pen.speed(10)
-
-    return instr_obj.instructions
+    try:
+        screen = turtle.Screen()
+        screen.setup(width=1000, height=1000)
+        pen = turtle.Turtle()
+        pen.up()
+        pen.hideturtle()
+        pen.speed(10)
+    except:
+        return "init turtle graphics error: {e}"
 
     # Initialize variables
     pi = math.pi
@@ -91,7 +90,7 @@ async def process_instructions(instr_obj: Instructions):
     
     # Extract canvas as eps file
     try:
-        screen.getcanvas().postscript(file="venv/diagrams/output.eps")
+        screen.getcanvas().postscript(file="diagrams/output.eps")
 
         # Convert diagram to PNG
         with Image(filename="diagrams/output.eps") as img:
