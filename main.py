@@ -1,5 +1,5 @@
 import uvicorn
-from fastapi import FastAPI, Response, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
@@ -11,23 +11,24 @@ from wand.image import Image
 import base64
 import os
 
+# Define the JSON passed into the post request
 class Instructions(BaseModel):
     instructions: str
 
 app = FastAPI()
 
-# origins = [
-#     "http://localhost:8000",
-#     "https://your-production-domain.com",
-# ]
+# Limit which domain can access the api
+origins = [
+    "https://your-production-domain.com",
+]
 
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=origins,
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/instructions")
 async def process_instructions(instr_obj: Instructions):

@@ -1,27 +1,19 @@
-# Deploy FastAPI on Render
+# Crochet Diagram Generator (Discontinued)
 
-Use this repo as a template to deploy a Python [FastAPI](https://fastapi.tiangolo.com) service on Render.
+The purpose of this project was to receive text input from the user and translate it into its corresponding diagram.
 
-See https://render.com/docs/deploy-fastapi or follow the steps below:
+## Method
 
-## Manual Steps
+The method used for drawing the diagram was turtle, python's built in library. Turtle requires a digital canvas for it to 'draw' on, which can then be saved as an eps file and later converted to jpeg.
 
-1. You may use this repository directly or [create your own repository from this template](https://github.com/render-examples/fastapi/generate) if you'd like to customize the code.
-2. Create a new Web Service on Render.
-3. Specify the URL to your new repository or this repository.
-4. Render will automatically detect that you are deploying a Python service and use `pip` to download the dependencies.
-5. Specify the following as the Start Command.
+## Why is it discontinued
 
-    ```shell
-    uvicorn main:app --host 0.0.0.0 --port $PORT
-    ```
+The cloud server I was using to deploy the API is "headless", meaning it does not have GUI. Without the GUI, turtle is unable to generate a canvas and thus the program fails from there. There was a method which involves generating a virtual display, but it only worked in a linux environment. I attempted to run it in WSL but was met with permission and connections errors. Without being able to test it locally, I did not want to risk deploying to the cloud server and have it not work. It was then I decided that it was prohibitively difficult to continue with turtle and started looking for another way.
 
-6. Click Create Web Service.
+## What I've learnt
 
-Or simply click:
+Not all is wasted. This was my first project where I designed an API and actually deployed to a cloud server for use over the internet. I had to call the API from within WordPress (WP) and figured out how to use the plugin to specify endpoints and parameter types. I had to encode the image to base64 and decode it on WP to display the generated image as WP only takes JSON or PHP, which I believe is the standard? All in all it was still a good experience.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/render-examples/fastapi)
+## What's next
 
-## Thanks
-
-Thanks to [Harish](https://harishgarg.com) for the [inspiration to create a FastAPI quickstart for Render](https://twitter.com/harishkgarg/status/1435084018677010434) and for some sample code!
+I have started looking for another method to complete this project and will update here when I do.
