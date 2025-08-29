@@ -17,3 +17,7 @@ Not all is wasted. This was my first project where I designed an API and actuall
 ## What's next
 
 I have started looking for another method to complete this project and will update here when I do.
+
+### 2025-09-28
+
+Update: I have completed the project using konva, you can find it [here](https://github.com/jaey8den/cdg-konva).
